@@ -28,7 +28,7 @@ class RestaurantModel {
     required this.deliveryTime,
     required this.deliveryFee,
   });
-
+  //팩토리 생성법
   factory RestaurantModel.fromJson({required Map<String, dynamic> json}) {
     return RestaurantModel(
       id: json['id'],

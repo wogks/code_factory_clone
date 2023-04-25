@@ -40,21 +40,8 @@ class RestaurantScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = snapshot.data![index];
                   final pItem = RestaurantModel.fromJson(json: item);
-                  return RestaurantCard(
-                    image: Image.network(
-                      pItem.thumbUrl,
-                      fit: BoxFit.cover,
-                    ),
-                    // image: Image.asset(
-                    //     '/Users/SIMBAAT/Desktop/simbaat/codfac/codfac/asset/img/food/ddeok_bok_gi.jpg',
-                    //     fit: BoxFit.cover),
-                    name: pItem.name,
-                    //다이나믹 리스트를 스트링리스트로 바꾸는법
-                    tags: pItem.tags,
-                    ratingsCount: pItem.ratingsCount,
-                    deliveryTime: pItem.deliveryTime,
-                    deliveryFee: pItem.deliveryFee,
-                    ratings: pItem.ratings,
+                  return RestaurantCard.fromModel(
+                    model: pItem,
                   );
                 },
                 separatorBuilder: (context, index) {
