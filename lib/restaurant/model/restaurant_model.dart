@@ -1,6 +1,5 @@
+import 'package:codfac/common/utils/data_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../common/const/data.dart';
 
 part 'restaurant_model.g.dart';
 
@@ -16,7 +15,7 @@ class RestaurantModel {
   final String name;
   //변환하고싶은 속석위에 제이슨키 입력
   @JsonKey(
-    fromJson: pathToUrl,
+    fromJson: DataUtils.pathToUrl,
     //toJson:
   )
   final String thumbUrl;
@@ -45,9 +44,9 @@ class RestaurantModel {
   Map<String, dynamic> toJson() => _$RestaurantModelToJson(this);
 
   //첫번째 파라미터에는 제이슨키가 애노테이트 해준 값이 들어간다
-  static pathToUrl(String value) {
-    return 'http://$ip$value';
-  }
+  // static pathToUrl(String value) {
+  //   return 'http://$ip$value';
+  // }
 
   // //팩토리 생성법
   // factory RestaurantModel.fromJson({required Map<String, dynamic> json}) {
