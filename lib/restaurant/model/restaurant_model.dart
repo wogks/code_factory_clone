@@ -1,4 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../common/const/data.dart';
+
+part 'restaurant_model.g.dart';
 
 enum RestaurantPriceRange {
   expensive,
@@ -6,9 +10,15 @@ enum RestaurantPriceRange {
   cheap,
 }
 
+@JsonSerializable()
 class RestaurantModel {
   final String id;
   final String name;
+  //변환하고싶은 속석위에 제이슨키 입력
+  @JsonKey(
+    fromJson: pathToUrl,
+    //toJson:
+  )
   final String thumbUrl;
   final List<String> tags;
   final RestaurantPriceRange priceRange;
@@ -28,19 +38,30 @@ class RestaurantModel {
     required this.deliveryTime,
     required this.deliveryFee,
   });
-  //팩토리 생성법
-  factory RestaurantModel.fromJson({required Map<String, dynamic> json}) {
-    return RestaurantModel(
-      id: json['id'],
-      name: json['name'],
-      thumbUrl: 'http://$ip${json['thumbUrl']}',
-      tags: List<String>.from(json['tags']),
-      priceRange: RestaurantPriceRange.values
-          .firstWhere((element) => element.name == json['priceRange']),
-      ratings: json['ratings'],
-      ratingsCount: json['ratingsCount'],
-      deliveryTime: json['deliveryTime'],
-      deliveryFee: json['deliveryFee'],
-    );
+
+  factory RestaurantModel.fromJson(Map<String, dynamic> json) =>
+      _$RestaurantModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RestaurantModelToJson(this);
+
+  //첫번째 파라미터에는 제이슨키가 애노테이트 해준 값이 들어간다
+  static pathToUrl(String value) {
+    return 'http://$ip$value';
   }
+
+  // //팩토리 생성법
+  // factory RestaurantModel.fromJson({required Map<String, dynamic> json}) {
+  //   return RestaurantModel(
+  //     id: json['id'],
+  //     name: json['name'],
+  //     thumbUrl: 'http://$ip${json['thumbUrl']}',
+  //     tags: List<String>.from(json['tags']),
+  //     priceRange: RestaurantPriceRange.values
+  //         .firstWhere((element) => element.name == json['priceRange']),
+  //     ratings: json['ratings'],
+  //     ratingsCount: json['ratingsCount'],
+  //     deliveryTime: json['deliveryTime'],
+  //     deliveryFee: json['deliveryFee'],
+  //   );
+  // }
 }
