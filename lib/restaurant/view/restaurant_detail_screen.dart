@@ -2,6 +2,7 @@ import 'package:codfac/common/const/data.dart';
 import 'package:codfac/common/layout/default_layout.dart';
 import 'package:codfac/product/component/product_card.dart';
 import 'package:codfac/restaurant/component/restaurant_card.dart';
+import 'package:codfac/restaurant/model/restaurant_detail_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class RestaurantDetailScreen extends StatelessWidget {
   final String id;
   const RestaurantDetailScreen({super.key, required this.id});
 
-  Future getRestaurantDetail() async {
+  Future<Map<String, dynamic>> getRestaurantDetail() async {
     final dio = Dio();
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
     final res = await dio.get(
@@ -20,20 +21,25 @@ class RestaurantDetailScreen extends StatelessWidget {
         },
       ),
     );
-    return res;
+    return res.data;
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
         title: '불타는 떡볶이',
-        child: FutureBuilder(
+        child: FutureBuilder<Map<String, dynamic>>(
           future: getRestaurantDetail(),
-          builder: (context, snapshot) {
-            print(snapshot.data);
+          builder: (_, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final item = RestaurantDetailModel.fromJson(json: snapshot.data!);
             return CustomScrollView(
               slivers: [
-                _renderTop(),
+                _renderTop(model: item),
                 _renderLabel(),
                 _renderProducts(),
               ],
@@ -64,20 +70,12 @@ class RestaurantDetailScreen extends StatelessWidget {
         );
   }
 
-  SliverToBoxAdapter _renderTop() {
+  SliverToBoxAdapter _renderTop({required RestaurantDetailModel model}) {
     //일반 위젯을 넣으려면 SliverToBoxAdapter안에 넣어야 한다
     return SliverToBoxAdapter(
-      child: RestaurantCard(
-        image: Image.asset(
-            '/Users/SIMBAAT/Desktop/simbaat/codfac/codfac/asset/img/food/ddeok_bok_gi.jpg'),
-        name: '떡볶이',
-        tags: const ['맛남', '나이스', '매움'],
-        ratingsCount: 100,
-        deliveryTime: 30,
-        deliveryFee: 12333,
-        ratings: 12,
+      child: RestaurantCard.fromModel(
+        model: model,
         isDetail: true,
-        detail: '맛있는 떡볶이',
       ),
     );
   }

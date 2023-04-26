@@ -1,4 +1,5 @@
 import 'package:codfac/common/const/color.dart';
+import 'package:codfac/restaurant/model/restaurant_detail_model.dart';
 import 'package:codfac/restaurant/model/restaurant_model.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +45,8 @@ class RestaurantCard extends StatelessWidget {
       deliveryFee: model.deliveryFee,
       ratings: model.ratings,
       isDetail: isDetail,
+      //들어오는 모델이 레스토랑디테일 모델이면 상세설명이 나온다
+      detail: model is RestaurantDetailModel ? model.detail : null,
     );
   }
 

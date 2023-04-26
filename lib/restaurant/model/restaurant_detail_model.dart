@@ -1,3 +1,4 @@
+import 'package:codfac/common/const/data.dart';
 import 'package:codfac/restaurant/model/restaurant_model.dart';
 
 //  추가되는 값들
@@ -34,8 +35,8 @@ class RestaurantDetailModel extends RestaurantModel {
     return RestaurantDetailModel(
       id: json['id'],
       name: json['name'],
-      thumbUrl: json['thumbUrl'],
-      tags: List<String>.from(['tags']),
+      thumbUrl: 'http://$ip${json['thumbUrl']}',
+      tags: List<String>.from(json['tags']),
       priceRange: RestaurantPriceRange.values
           .firstWhere((element) => element.name == json['priceRange']),
       ratings: json['ratings'],
@@ -44,7 +45,17 @@ class RestaurantDetailModel extends RestaurantModel {
       deliveryFee: json['deliveryFee'],
       detail: json['detail'],
       //tag에 리스트<다이나믹>을 넣을수 없는것 처럼 여기도 마찬가지로 마음대로 리스트로 넣을수가 없다
-      products: json['products'],
+      products: json['products']
+          .map<RestaurantProductModel>(
+            (x) => RestaurantProductModel(
+              id: x['id'],
+              name: x['name'],
+              imgUrl: x['imgUrl'],
+              detail: x['detail'],
+              price: x['price'],
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -61,7 +72,7 @@ class RestaurantProductModel {
   final String name;
   final String imgUrl;
   final String detail;
-  final String price;
+  final int price;
 
   RestaurantProductModel({
     required this.id,
