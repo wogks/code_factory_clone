@@ -46,15 +46,9 @@ class RestaurantDetailModel extends RestaurantModel {
       detail: json['detail'],
       //tag에 리스트<다이나믹>을 넣을수 없는것 처럼 여기도 마찬가지로 마음대로 리스트로 넣을수가 없다
       products: json['products']
-          .map<RestaurantProductModel>(
-            (x) => RestaurantProductModel(
-              id: x['id'],
-              name: x['name'],
-              imgUrl: x['imgUrl'],
-              detail: x['detail'],
-              price: x['price'],
-            ),
-          )
+          .map<RestaurantProductModel>((x) => RestaurantProductModel.fromJson(
+                json: x,
+              ))
           .toList(),
     );
   }
@@ -81,4 +75,15 @@ class RestaurantProductModel {
     required this.detail,
     required this.price,
   });
+
+  factory RestaurantProductModel.fromJson(
+      {required Map<String, dynamic> json}) {
+    return RestaurantProductModel(
+      id: json['id'],
+      name: json['name'],
+      imgUrl: 'http://$ip${json['imgUrl']}',
+      detail: json['detail'],
+      price: json['price'],
+    );
+  }
 }
