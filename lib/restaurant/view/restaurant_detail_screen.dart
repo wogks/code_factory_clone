@@ -42,9 +42,9 @@ class RestaurantDetailScreen extends StatelessWidget {
         child: FutureBuilder<RestaurantDetailModel>(
           future: getRestaurantDetail(),
           builder: (_, AsyncSnapshot<RestaurantDetailModel> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(snapshot.error.toString()),
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
             }
             // final item = RestaurantDetailModel.fromJson(snapshot.data!);

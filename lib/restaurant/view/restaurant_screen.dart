@@ -1,3 +1,4 @@
+import 'package:codfac/common/dio/dio.dart';
 import 'package:codfac/restaurant/component/restaurant_card.dart';
 import 'package:codfac/restaurant/model/restaurant_model.dart';
 import 'package:codfac/restaurant/view/restaurant_detail_screen.dart';
@@ -11,6 +12,10 @@ class RestaurantScreen extends StatelessWidget {
 
   Future<List> paginateRestaurant() async {
     final dio = Dio();
+    
+    dio.interceptors.add(
+      CustomIntercepter(storage: storage),
+    );
 
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
