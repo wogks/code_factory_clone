@@ -1,4 +1,5 @@
 import 'package:codfac/common/dio/dio.dart';
+import 'package:codfac/common/model/cursor_pagination_model.dart';
 import 'package:codfac/restaurant/component/restaurant_card.dart';
 import 'package:codfac/restaurant/model/restaurant_model.dart';
 import 'package:codfac/restaurant/repository/restaurant_repository.dart';
@@ -36,18 +37,19 @@ class RestaurantScreen extends ConsumerWidget {
     return Container(
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: FutureBuilder<List<RestaurantModel>>(
-            future: paginateRestaurant(ref),
-            builder: (context, AsyncSnapshot<List<RestaurantModel>> snapshot) {
+          child: FutureBuilder<CursorPagination<RestaurantModel>>(
+            future: ref.watch(restaurantRepositoryProvider).pagenate(),
+            builder: (context,
+                AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
               return ListView.separated(
-                itemCount: snapshot.data!.length,
+                itemCount: snapshot.data!.data.length,
                 itemBuilder: (context, index) {
-                  final pItem = snapshot.data![index];
+                  final pItem = snapshot.data!.data[index];
 
                   return GestureDetector(
                     onTap: () {
