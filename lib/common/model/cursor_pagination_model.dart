@@ -9,12 +9,8 @@ class CursorPaginationError extends CursorPaginationBase {
 
   CursorPaginationError({required this.message});
 }
-class CursorPaginationLoading extends CursorPaginationBase {
 
-}
-
-
-
+class CursorPaginationLoading extends CursorPaginationBase {}
 
 @JsonSerializable(
   genericArgumentFactories: true,
@@ -31,6 +27,13 @@ class CursorPagination<T> extends CursorPaginationBase {
   factory CursorPagination.fromJson(
           Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
       _$CursorPaginationFromJson(json, fromJsonT);
+
+  CursorPagination copyWith({
+    CursorPaginationMeta? meta,
+    List<T>? data,
+  }) {
+    return CursorPagination(meta: meta ?? this.meta, data: data ?? this.data);
+  }
 }
 
 @JsonSerializable()
@@ -42,6 +45,13 @@ class CursorPaginationMeta {
     required this.count,
     required this.hasMore,
   });
+
+  CursorPaginationMeta copyWith({int? count, bool? hasMore}) {
+    return CursorPaginationMeta(
+      count: count ?? this.count,
+      hasMore: hasMore ?? this.hasMore,
+    );
+  }
 
   factory CursorPaginationMeta.fromJson(Map<String, dynamic> json) =>
       _$CursorPaginationMetaFromJson(json);
@@ -55,5 +65,4 @@ class CursorPaginationRefetching<T> extends CursorPagination<T> {
 //리스트의 맨 아래로 내려서 추가 데이터를 요청하는중
 class CursorPaginationFetchingMore<T> extends CursorPagination<T> {
   CursorPaginationFetchingMore({required super.meta, required super.data});
-
 }
