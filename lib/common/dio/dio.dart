@@ -1,6 +1,17 @@
 import 'package:codfac/common/const/data.dart';
+import 'package:codfac/common/secure_storage/secure_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final dioProvider = Provider<Dio>((ref) {
+  final dio = Dio();
+  final storage = ref.watch(secureStorageProvider);
+
+  dio.interceptors.add(CustomIntercepter(storage: storage));
+
+  return dio;
+});
 
 class CustomIntercepter extends Interceptor {
   final FlutterSecureStorage storage;
@@ -33,7 +44,7 @@ class CustomIntercepter extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     print(
         '[RES] [${response.requestOptions.method}] ${response.requestOptions.uri}');
-        //하고싶은 작업이 있으면 한다
+    //하고싶은 작업이 있으면 한다
     return super.onResponse(response, handler);
   }
 //3) 에러가 났을때
