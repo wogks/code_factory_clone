@@ -1,5 +1,6 @@
 import 'package:codfac/common/dio/dio.dart';
 import 'package:codfac/common/model/cursor_pagination_model.dart';
+import 'package:codfac/common/model/pagination_params.dart';
 import 'package:codfac/restaurant/model/restaurant_detail_model.dart';
 import 'package:codfac/restaurant/model/restaurant_model.dart';
 import 'package:dio/dio.dart' hide Headers;
@@ -26,7 +27,9 @@ abstract class RestaurantRepository {
   //baseUrl 일반화할 주소 = http://$ip/restaurant/
   @GET('/')
   @Headers({'accessToken': 'true'})
-  Future<CursorPagination<RestaurantModel>> pagenate();
+  Future<CursorPagination<RestaurantModel>> pagenate({
+    @Queries() PaginationParams? paginationParams = const PaginationParams(),
+  });
 
   //baseUrl 일반화할 주소 = http://$ip/restaurant/:id
   @GET('/{id}')
