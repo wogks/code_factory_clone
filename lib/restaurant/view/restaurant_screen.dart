@@ -1,7 +1,7 @@
 import 'package:codfac/common/dio/dio.dart';
-import 'package:codfac/common/model/cursor_pagination_model.dart';
 import 'package:codfac/restaurant/component/restaurant_card.dart';
 import 'package:codfac/restaurant/model/restaurant_model.dart';
+import 'package:codfac/restaurant/provider/restaurant_provider.dart';
 import 'package:codfac/restaurant/repository/restaurant_repository.dart';
 import 'package:codfac/restaurant/view/restaurant_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -34,44 +34,37 @@ class RestaurantScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: FutureBuilder<CursorPagination<RestaurantModel>>(
-            future: ref.watch(restaurantRepositoryProvider).pagenate(),
-            builder: (context,
-                AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return ListView.separated(
-                itemCount: snapshot.data!.data.length,
-                itemBuilder: (context, index) {
-                  final pItem = snapshot.data!.data[index];
+    final data = ref.watch(restaurantProvider);
+    if (data.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.separated(
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          final pItem = data[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              RestaurantDetailScreen(id: pItem.id),
-                        ),
-                      );
-                    },
-                    child: RestaurantCard.fromModel(
-                      model: pItem,
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 16);
-                },
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RestaurantDetailScreen(id: pItem.id),
+                ),
               );
             },
-          )),
+            child: RestaurantCard.fromModel(
+              model: pItem,
+            ),
+          );
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(height: 16);
+        },
+      ),
     );
   }
 }
