@@ -1,5 +1,6 @@
 import 'package:codfac/common/const/color.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class RatingCard extends StatelessWidget {
   final ImageProvider avatarImage;
@@ -27,7 +28,11 @@ class RatingCard extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         _Body(content: content),
-        const _Images()
+        if (images.isNotEmpty)
+          SizedBox(
+            height: 100,
+            child: _Images(images: images),
+          ),
       ],
     );
   }
@@ -93,10 +98,26 @@ class _Body extends StatelessWidget {
 }
 
 class _Images extends StatelessWidget {
-  const _Images();
+  final List<Image> images;
+  const _Images({required this.images});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListView(
+        //높이를 꼭 설정해줘야 해서 이 스테이트레스 위젯을 사이즈드박스 ex)height:100으로 지정 해준다. 좌우는 알아서 됨
+        scrollDirection: Axis.horizontal,
+        children: images
+            .mapIndexed(
+              (index, element) => Padding(
+                padding:
+                    //마지막 값에는 패딩을 넣지 않겠다
+                    EdgeInsets.only(right: index == images.length - 1 ? 0 : 16),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: element,
+                ),
+              ),
+            )
+            .toList());
   }
 }
