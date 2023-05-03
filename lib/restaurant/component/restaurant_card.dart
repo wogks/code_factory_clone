@@ -10,6 +10,7 @@ class RestaurantCard extends StatelessWidget {
   final int ratingsCount;
   final int deliveryTime;
   final int deliveryFee;
+  final String? heroKey;
   final double ratings;
   //상세카드여부
   final bool isDetail;
@@ -26,6 +27,7 @@ class RestaurantCard extends StatelessWidget {
     required this.ratings,
     this.isDetail = false,
     this.detail,
+    this.heroKey,
   });
 
   factory RestaurantCard.fromModel({
@@ -45,6 +47,7 @@ class RestaurantCard extends StatelessWidget {
       deliveryFee: model.deliveryFee,
       ratings: model.ratings,
       isDetail: isDetail,
+      heroKey: model.id,
       //들어오는 모델이 레스토랑디테일 모델이면 상세설명이 나온다
       detail: model is RestaurantDetailModel ? model.detail : null,
     );
@@ -55,11 +58,18 @@ class RestaurantCard extends StatelessWidget {
     return Column(
       children: [
         //이프문을 위젯 안에서 작성을 하면 바로 밑에꺼에만 적용이 된다
-        if (isDetail) image,
-        if (!isDetail)
-          //테두리깍는위젯
+        //테두리깍는위젯
+        if (heroKey != null)
+          Hero(
+            tag: ObjectKey(heroKey),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(isDetail ? 0 : 12),
+              child: image,
+            ),
+          ),
+        if (heroKey == null)
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(isDetail ? 0 : 12),
             child: image,
           ),
         const SizedBox(height: 16),
