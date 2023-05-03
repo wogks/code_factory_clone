@@ -1,7 +1,18 @@
 import 'package:codfac/common/model/cursor_pagination_model.dart';
 import 'package:codfac/common/model/pagination_params.dart';
+import 'package:codfac/restaurant/model/restaurant_model.dart';
 import 'package:codfac/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final restauratDetailProvider =
+    Provider.family<RestaurantModel?, String>((ref, id) {
+  final state = ref.watch(restaurantProvider);
+
+  if (state is! CursorPagination<RestaurantModel>) {
+    return null;
+  }
+  return state.data.firstWhere((element) => element.id == id);
+});
 
 final restaurantProvider =
     StateNotifierProvider<RestuarantStateNotifier, CursorPaginationBase>((ref) {

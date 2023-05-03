@@ -2,9 +2,12 @@ import 'package:codfac/common/layout/default_layout.dart';
 import 'package:codfac/product/component/product_card.dart';
 import 'package:codfac/restaurant/component/restaurant_card.dart';
 import 'package:codfac/restaurant/model/restaurant_detail_model.dart';
+import 'package:codfac/restaurant/provider/restaurant_provider.dart';
 import 'package:codfac/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../model/restaurant_model.dart';
 
 class RestaurantDetailScreen extends ConsumerWidget {
   final String id;
@@ -33,53 +36,28 @@ class RestaurantDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
+    final state = ref.watch(restauratDetailProvider(id));
+    if (state == null) {
+      return const DefaultLayout(
+          child: Center(
+        child: CircularProgressIndicator(),
+      ));
+    }
     return DefaultLayout(
-        title: '불타는 떡볶이',
-        child: FutureBuilder<RestaurantDetailModel>(
-          future: ref
-              .watch(restaurantRepositoryProvider)
-              .getRestaurantDetail(id: id),
-          builder: (_, AsyncSnapshot<RestaurantDetailModel> snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            // final item = RestaurantDetailModel.fromJson(snapshot.data!);
-            return CustomScrollView(
-              slivers: [
-                _renderTop(model: snapshot.data!),
-                _renderLabel(),
-                _renderProducts(products: snapshot.data!.products),
-              ],
-            );
-          },
-        )
-
-        // child: Column(
-        //   children: [
-        //     RestaurantCard(
-        //       image: Image.asset(
-        //           '/Users/wogks/Desktop/simbatt/codfac/asset/img/food/ddeok_bok_gi.jpg'),
-        //       name: '떡볶이',
-        //       tags: const ['맛남', '나이스', '매움'],
-        //       ratingsCount: 100,
-        //       deliveryTime: 30,
-        //       deliveryFee: 12333,
-        //       ratings: 12,
-        //       isDetail: true,
-        //       detail: '맛있는 떡볶이',
-        //     ),
-        //     const Padding(
-        //       padding: EdgeInsets.symmetric(horizontal: 16.0),
-        //       child: ProductCard(),
-        //     )
-        //   ],
-        // ),
-        );
+      title: '불타는 떡볶이',
+      child: CustomScrollView(
+        slivers: [
+          //레스토랑 스크린에 이미 있던 데이터에서 뽑아왔기때문에 로딩이 없음
+          _renderTop(model: state),
+          // _renderLabel(),
+          // _renderProducts(products: state),
+        ],
+      ),
+    );
   }
 
-  SliverToBoxAdapter _renderTop({required RestaurantDetailModel model}) {
+  SliverToBoxAdapter _renderTop({required RestaurantModel model}) {
     //일반 위젯을 넣으려면 SliverToBoxAdapter안에 넣어야 한다
     return SliverToBoxAdapter(
       child: RestaurantCard.fromModel(
