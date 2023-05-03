@@ -6,6 +6,7 @@ import 'package:codfac/restaurant/provider/restaurant_provider.dart';
 import 'package:codfac/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletons/skeletons.dart';
 
 import '../model/restaurant_model.dart';
 
@@ -64,10 +65,31 @@ class _RestaurantDetailScreenState
         slivers: [
           //레스토랑 스크린에 이미 있던 데이터에서 뽑아왔기때문에 로딩이 없음
           _renderTop(model: state),
+          if (state is! RestaurantDetailModel) renderLoading(),
           if (state is RestaurantDetailModel) _renderLabel(),
           if (state is RestaurantDetailModel)
             _renderProducts(products: state.products),
         ],
+      ),
+    );
+  }
+
+  SliverPadding renderLoading() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          List.generate(
+            3,
+            (index) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SkeletonParagraph(
+                style: const SkeletonParagraphStyle(
+                    lines: 5, padding: EdgeInsets.zero),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
