@@ -1,4 +1,5 @@
 import 'package:codfac/common/layout/default_layout.dart';
+import 'package:codfac/common/rating/component/rating_card.dart';
 import 'package:codfac/product/component/product_card.dart';
 import 'package:codfac/restaurant/component/restaurant_card.dart';
 import 'package:codfac/restaurant/model/restaurant_detail_model.dart';
@@ -69,6 +70,18 @@ class _RestaurantDetailScreenState
           if (state is RestaurantDetailModel) _renderLabel(),
           if (state is RestaurantDetailModel)
             _renderProducts(products: state.products),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverToBoxAdapter(
+              child: RatingCard(
+                avatarImage: AssetImage(''),
+                content: '맛있습니다',
+                email: 'wogks@naver.com',
+                images: [],
+                rating: 4,
+              ),
+            ),
+          )
         ],
       ),
     );
