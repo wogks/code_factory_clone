@@ -1,3 +1,4 @@
+import 'package:codfac/common/model/model_with_id.dart';
 import 'package:codfac/common/utils/data_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -10,7 +11,8 @@ enum RestaurantPriceRange {
 }
 
 @JsonSerializable()
-class RestaurantModel {
+class RestaurantModel implements IModelWithId {
+  @override
   final String id;
   final String name;
   //변환하고싶은 속석위에 제이슨키 입력
