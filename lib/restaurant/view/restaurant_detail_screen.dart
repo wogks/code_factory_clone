@@ -1,23 +1,26 @@
-import 'package:codfac/common/layout/default_layout.dart';
-import 'package:codfac/common/model/cursor_pagination_model.dart';
-import 'package:codfac/common/rating/component/rating_card.dart';
-import 'package:codfac/common/rating/model/rating_model.dart';
-import 'package:codfac/common/utils/pagination_utils.dart';
-import 'package:codfac/product/component/product_card.dart';
-import 'package:codfac/restaurant/component/restaurant_card.dart';
-import 'package:codfac/restaurant/model/restaurant_detail_model.dart';
-import 'package:codfac/restaurant/provider/restaurant_provider.dart';
-import 'package:codfac/restaurant/provider/restaurant_rating_provider.dart';
-import 'package:codfac/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
 
+import '../../common/layout/default_layout.dart';
+import '../../common/model/cursor_pagination_model.dart';
+import '../../common/rating/component/rating_card.dart';
+import '../../common/rating/model/rating_model.dart';
+import '../../common/utils/pagination_utils.dart';
+import '../../product/component/product_card.dart';
+import '../component/restaurant_card.dart';
+import '../model/restaurant_detail_model.dart';
 import '../model/restaurant_model.dart';
+import '../provider/restaurant_provider.dart';
+import '../provider/restaurant_rating_provider.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
-  const RestaurantDetailScreen({super.key, required this.id});
+
+  const RestaurantDetailScreen({
+    required this.id,
+    Key? key,
+  }) : super(key: key);
 
   @override
   ConsumerState<RestaurantDetailScreen> createState() =>
@@ -26,20 +29,15 @@ class RestaurantDetailScreen extends ConsumerStatefulWidget {
 
 class _RestaurantDetailScreenState
     extends ConsumerState<RestaurantDetailScreen> {
-  Future<RestaurantDetailModel> getRestaurantDetail(WidgetRef ref) async {
-    return ref
-        .watch(restaurantRepositoryProvider)
-        .getRestaurantDetail(id: widget.id);
-  }
-
-  final controller = ScrollController();
+  final ScrollController controller = ScrollController();
 
   @override
   void initState() {
     super.initState();
+
     ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
 
-    controller.addListener(() {});
+    controller.addListener(listener);
   }
 
   void listener() {
@@ -54,42 +52,75 @@ class _RestaurantDetailScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(restauratDetailProvider(widget.id));
-    final ratingState = ref.watch(restaurantRatingProvider(widget.id));
+    final ratingsState = ref.watch(restaurantRatingProvider(widget.id));
+
     if (state == null) {
       return const DefaultLayout(
-          child: Center(
-        child: CircularProgressIndicator(),
-      ));
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
+
     return DefaultLayout(
       title: '불타는 떡볶이',
       child: CustomScrollView(
+        controller: controller,
         slivers: [
-          //레스토랑 스크린에 이미 있던 데이터에서 뽑아왔기때문에 로딩이 없음
-          _renderTop(model: state),
+          renderTop(
+            model: state,
+          ),
           if (state is! RestaurantDetailModel) renderLoading(),
-          if (state is RestaurantDetailModel) _renderLabel(),
+          if (state is RestaurantDetailModel) renderLabel(),
           if (state is RestaurantDetailModel)
-            _renderProducts(products: state.products),
-          if (ratingState is CursorPagination<RatingModel>)
-            renderRating(models: ratingState.data),
+            renderProducts(
+              products: state.products,
+            ),
+          if (ratingsState is CursorPagination<RatingModel>)
+            renderRatings(
+              models: ratingsState.data,
+            ),
         ],
+      ),
+    );
+  }
+
+  SliverPadding renderRatings({
+    required List<RatingModel> models,
+  }) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (_, index) => Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: RatingCard.fromModel(
+              model: models[index],
+            ),
+          ),
+          childCount: models.length,
+        ),
       ),
     );
   }
 
   SliverPadding renderLoading() {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(
+        vertical: 16.0,
+        horizontal: 16.0,
+      ),
       sliver: SliverList(
         delegate: SliverChildListDelegate(
           List.generate(
             3,
             (index) => Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(bottom: 32.0),
               child: SkeletonParagraph(
                 style: const SkeletonParagraphStyle(
-                    lines: 5, padding: EdgeInsets.zero),
+                  lines: 5,
+                  padding: EdgeInsets.zero,
+                ),
               ),
             ),
           ),
@@ -98,41 +129,36 @@ class _RestaurantDetailScreenState
     );
   }
 
-  SliverPadding renderRating({required List<RatingModel> models}) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-            (context, index) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: RatingCard.fromModel(model: models[index]),
-                ),
-            childCount: models.length),
+  SliverPadding renderLabel() {
+    return const SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      sliver: SliverToBoxAdapter(
+        child: Text(
+          '메뉴',
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }
 
-  SliverToBoxAdapter _renderTop({required RestaurantModel model}) {
-    //일반 위젯을 넣으려면 SliverToBoxAdapter안에 넣어야 한다
-    return SliverToBoxAdapter(
-      child: RestaurantCard.fromModel(
-        model: model,
-        isDetail: true,
-      ),
-    );
-  }
-
-  SliverPadding _renderProducts(
-      {required List<RestaurantProductModel> products}) {
+  SliverPadding renderProducts({
+    required List<RestaurantProductModel> products,
+  }) {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             final model = products[index];
+
             return Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: ProductCard.fromModel(model: model),
+              child: ProductCard.fromModel(
+                model: model,
+              ),
             );
           },
           childCount: products.length,
@@ -141,17 +167,13 @@ class _RestaurantDetailScreenState
     );
   }
 
-  _renderLabel() {
-    return const SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverToBoxAdapter(
-        child: Text(
-          '메뉴',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+  SliverToBoxAdapter renderTop({
+    required RestaurantModel model,
+  }) {
+    return SliverToBoxAdapter(
+      child: RestaurantCard.fromModel(
+        model: model,
+        isDetail: true,
       ),
     );
   }

@@ -1,26 +1,44 @@
-import 'package:codfac/common/const/color.dart';
 import 'package:codfac/common/rating/model/rating_model.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
+import '../../const/color.dart';
+
 class RatingCard extends StatelessWidget {
+  // NetworkImage
+  // AssetImage
+  //
+  // CircleAvatar
   final ImageProvider avatarImage;
+
+  // 리스트로 위젯 이미지를 보여줄때
   final List<Image> images;
+
+  // 별점
   final int rating;
+
+  // 이메일
   final String email;
+
+  // 리뷰 내용
   final String content;
+
   const RatingCard({
-    super.key,
     required this.avatarImage,
     required this.images,
     required this.rating,
     required this.email,
     required this.content,
-  });
+    Key? key,
+  }) : super(key: key);
 
-  factory RatingCard.fromModel({required RatingModel model}) {
+  factory RatingCard.fromModel({
+    required RatingModel model,
+  }) {
     return RatingCard(
-      avatarImage: NetworkImage(model.user.imageUrl),
+      avatarImage: NetworkImage(
+        model.user.imageUrl,
+      ),
       images: model.imgUrls.map((e) => Image.network(e)).toList(),
       rating: model.rating,
       email: model.user.username,
@@ -37,12 +55,19 @@ class RatingCard extends StatelessWidget {
           email: email,
           rating: rating,
         ),
-        const SizedBox(height: 8),
-        _Body(content: content),
+        const SizedBox(height: 8.0),
+        _Body(
+          content: content,
+        ),
         if (images.isNotEmpty)
-          SizedBox(
-            height: 100,
-            child: _Images(images: images),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: SizedBox(
+              height: 100,
+              child: _Images(
+                images: images,
+              ),
+            ),
           ),
       ],
     );
@@ -53,36 +78,41 @@ class _Header extends StatelessWidget {
   final ImageProvider avatarImage;
   final String email;
   final int rating;
-  const _Header(
-      {required this.avatarImage, required this.email, required this.rating});
+
+  const _Header({
+    required this.avatarImage,
+    required this.rating,
+    required this.email,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         CircleAvatar(
-          radius: 12,
+          radius: 12.0,
           backgroundImage: avatarImage,
-          backgroundColor: Colors.blue,
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 8.0),
         Expanded(
           child: Text(
             email,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 14.0,
               color: Colors.black,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
         ...List.generate(
-            5,
-            (index) => Icon(
-                  index < rating ? Icons.star : Icons.star_border_outlined,
-                  color: PRIMARY_COLOR,
-                ))
+          5,
+          (index) => Icon(
+            index < rating ? Icons.star : Icons.star_border_outlined,
+            color: PRIMARY_COLOR,
+          ),
+        ),
       ],
     );
   }
@@ -90,17 +120,23 @@ class _Header extends StatelessWidget {
 
 class _Body extends StatelessWidget {
   final String content;
-  const _Body({required this.content});
+
+  const _Body({
+    required this.content,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        //플레시블 안에 텍스트를 넣으면 글이 길어지면 다음으로 넘어간다
         Flexible(
           child: Text(
             content,
-            style: const TextStyle(color: BODY_TEXT_COLOR, fontSize: 14),
+            style: const TextStyle(
+              color: BODY_TEXT_COLOR,
+              fontSize: 14.0,
+            ),
           ),
         ),
       ],
@@ -110,25 +146,26 @@ class _Body extends StatelessWidget {
 
 class _Images extends StatelessWidget {
   final List<Image> images;
-  const _Images({required this.images});
+
+  const _Images({required this.images, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
-        //높이를 꼭 설정해줘야 해서 이 스테이트레스 위젯을 사이즈드박스 ex)height:100으로 지정 해준다. 좌우는 알아서 됨
-        scrollDirection: Axis.horizontal,
-        children: images
-            .mapIndexed(
-              (index, element) => Padding(
-                padding:
-                    //마지막 값에는 패딩을 넣지 않겠다
-                    EdgeInsets.only(right: index == images.length - 1 ? 0 : 16),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: element,
-                ),
+      scrollDirection: Axis.horizontal,
+      children: images
+          .mapIndexed(
+            (index, e) => Padding(
+              padding: EdgeInsets.only(
+                right: index == images.length - 1 ? 0 : 16.0,
               ),
-            )
-            .toList());
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: e,
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 }

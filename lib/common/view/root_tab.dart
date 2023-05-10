@@ -1,5 +1,6 @@
 import 'package:codfac/common/const/color.dart';
 import 'package:codfac/common/layout/default_layout.dart';
+import 'package:codfac/product/view/product_tab.dart';
 import 'package:codfac/restaurant/view/restaurant_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +52,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.fastfood_outlined), label: '홈'),
+              icon: Icon(Icons.fastfood_outlined), label: '음식'),
           BottomNavigationBarItem(
               icon: Icon(Icons.receipt_long_outlined), label: '주문'),
           BottomNavigationBarItem(
@@ -64,9 +65,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         controller: controller,
         children: [
           const RestaurantScreen(),
-          Container(
-            child: const Text('2'),
-          ),
+          const ProductTab(),
           Container(
             child: const Text('3'),
           ),

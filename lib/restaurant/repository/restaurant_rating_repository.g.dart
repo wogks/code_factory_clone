@@ -19,7 +19,7 @@ class _RestaurantRatingRepository implements RestaurantRatingRepository {
   String? baseUrl;
 
   @override
-  Future<CursorPagination<RatingModel>> pagenate(
+  Future<CursorPagination<RatingModel>> paginate(
       {paginationParams = const PaginationParams()}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

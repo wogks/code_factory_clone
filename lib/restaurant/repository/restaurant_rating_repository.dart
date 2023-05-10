@@ -27,7 +27,7 @@ abstract class RestaurantRatingRepository
   @GET('/')
   //dio에서의 헤더를 가져올수도 있기때문에 hide
   @Headers({'accessToken': 'true'})
-  Future<CursorPagination<RatingModel>> pagenate({
+  Future<CursorPagination<RatingModel>> paginate({
     @Queries() PaginationParams? paginationParams = const PaginationParams(),
   });
 }
