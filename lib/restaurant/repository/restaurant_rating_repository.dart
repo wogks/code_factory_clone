@@ -9,7 +9,7 @@ import '../../common/model/cursor_pagination_model.dart';
 import '../../common/model/pagination_params.dart';
 part 'restaurant_rating_repository.g.dart';
 
-final restaurantRatingRepository =
+final restaurantRatingRepositoryProvider =
     Provider.family<RestaurantRatingRepository, String>((ref, id) {
   final dio = Dio();
   return RestaurantRatingRepository(dio,
