@@ -2,6 +2,7 @@ import 'package:codfac/common/layout/default_layout.dart';
 import 'package:codfac/common/model/cursor_pagination_model.dart';
 import 'package:codfac/common/rating/component/rating_card.dart';
 import 'package:codfac/common/rating/model/rating_model.dart';
+import 'package:codfac/common/utils/pagination_utils.dart';
 import 'package:codfac/product/component/product_card.dart';
 import 'package:codfac/restaurant/component/restaurant_card.dart';
 import 'package:codfac/restaurant/model/restaurant_detail_model.dart';
@@ -29,29 +30,25 @@ class _RestaurantDetailScreenState
     return ref
         .watch(restaurantRepositoryProvider)
         .getRestaurantDetail(id: widget.id);
-
-    // final dio = ref.watch(dioProvider);
-
-    // final repository =
-    //     RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
-    // return repository.getRestaurantDetail(id: id);
-
-    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-    // final res = await dio.get(
-    //   'http://$ip/restaurant/$id',
-    //   options: Options(
-    //     headers: {
-    //       'authorization': 'Bearer $accessToken',
-    //     },
-    //   ),
-    // );
-    // return res.data;
   }
+
+  final controller = ScrollController();
 
   @override
   void initState() {
     super.initState();
     ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
+
+    controller.addListener(() {});
+  }
+
+  void listener() {
+    PaginationUtils.paginate(
+      controller: controller,
+      provider: ref.read(
+        restaurantRatingProvider(widget.id).notifier,
+      ),
+    );
   }
 
   @override
