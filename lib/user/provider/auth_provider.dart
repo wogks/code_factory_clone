@@ -42,7 +42,7 @@ class AuthProvider extends ChangeNotifier {
         GoRoute(
           path: '/splash',
           name: SplashScreen.routeName,
-          builder: (_, __) => const SplashScreen(),
+          builder: (_, __) => SplashScreen(),
         ),
         GoRoute(
           path: '/login',
