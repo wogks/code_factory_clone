@@ -33,6 +33,7 @@ class AuthProvider extends ChangeNotifier {
           routes: [
             GoRoute(
               path: 'restaurant/:rid',
+              name: RestaurantDetailScreen.raoutName,
               builder: (_, state) => RestaurantDetailScreen(
                 id: state.params['rid']!,
               ),
@@ -42,7 +43,7 @@ class AuthProvider extends ChangeNotifier {
         GoRoute(
           path: '/splash',
           name: SplashScreen.routeName,
-          builder: (_, __) => SplashScreen(),
+          builder: (_, __) => const SplashScreen(),
         ),
         GoRoute(
           path: '/login',

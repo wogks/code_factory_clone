@@ -4,6 +4,7 @@ import 'package:codfac/product/model/product_model.dart';
 import 'package:codfac/product/provider/product_provider.dart';
 import 'package:codfac/restaurant/view/restaurant_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key});
@@ -15,14 +16,8 @@ class ProductScreen extends StatelessWidget {
       itemBuilder: <ProductModel>(_, index, model) {
         return GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RestaurantDetailScreen(
-                    id: model.restaurant.id,
-                  ),
-                ),
-              );
+              context.goNamed(RestaurantDetailScreen.raoutName,
+                  params: {'rid': model.restaurant.id});
             },
             child: ProductCard.fromProdectModel(model: model));
       },

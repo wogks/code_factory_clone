@@ -1,7 +1,6 @@
+import 'package:codfac/common/utils/data_utils.dart';
 import 'package:codfac/restaurant/model/restaurant_model.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../common/utils/data_utils.dart';
 
 part 'restaurant_detail_model.g.dart';
 
