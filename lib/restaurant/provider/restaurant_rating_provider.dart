@@ -7,10 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final restaurantRatingProvider = StateNotifierProvider.family<
     RestaurantRatingStateNotifier, CursorPaginationBase, String>((ref, id) {
   final repo = ref.watch(restaurantRatingRepositoryProvider(id));
+
   return RestaurantRatingStateNotifier(repository: repo);
 });
 
 class RestaurantRatingStateNotifier
     extends PaginationProvider<RatingModel, RestaurantRatingRepository> {
-  RestaurantRatingStateNotifier({required super.repository});
+  RestaurantRatingStateNotifier({
+    required super.repository,
+  });
 }

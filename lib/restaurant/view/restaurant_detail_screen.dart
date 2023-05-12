@@ -1,3 +1,5 @@
+import 'package:codfac/product/model/product_model.dart';
+import 'package:codfac/user/provider/basket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
@@ -54,10 +56,21 @@ class _RestaurantDetailScreenState
   Widget build(BuildContext context) {
     final state = ref.watch(restauratDetailProvider(widget.id));
     final ratingsState = ref.watch(restaurantRatingProvider(widget.id));
+    final basket = ref.watch(basketProvider);
 
     if (state == null) {
-      return const DefaultLayout(
-        child: Center(
+      return DefaultLayout(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Badge(
+            isLabelVisible: basket.isNotEmpty,
+            child: Text(basket
+                .fold<int>(0,
+                    (previousValue, element) => previousValue + element.count)
+                .toString()),
+          ),
+        ),
+        child: const Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -75,6 +88,7 @@ class _RestaurantDetailScreenState
           if (state is RestaurantDetailModel) renderLabel(),
           if (state is RestaurantDetailModel)
             renderProducts(
+              restaurant: state,
               products: state.products,
             ),
           if (ratingsState is CursorPagination<RatingModel>)
@@ -146,6 +160,7 @@ class _RestaurantDetailScreenState
   }
 
   SliverPadding renderProducts({
+    required RestaurantModel restaurant,
     required List<RestaurantProductModel> products,
   }) {
     return SliverPadding(
@@ -155,10 +170,23 @@ class _RestaurantDetailScreenState
           (context, index) {
             final model = products[index];
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: ProductCard.fromRestauratnModel(
-                model: model,
+            return InkWell(
+              onTap: () {
+                ref.read(basketProvider.notifier).addToBasket(
+                        product: ProductModel(
+                      id: model.id,
+                      name: model.name,
+                      detail: model.detail,
+                      imgUrl: model.imgUrl,
+                      price: model.price,
+                      restaurant: restaurant,
+                    ));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ProductCard.fromRestauratnModel(
+                  model: model,
+                ),
               ),
             );
           },

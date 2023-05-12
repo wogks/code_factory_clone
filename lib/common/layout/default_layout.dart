@@ -5,12 +5,14 @@ class DefaultLayout extends StatelessWidget {
   final Color? backgoundColor;
   final String? title;
   final BottomNavigationBar? bottomNavigationBar;
+  final Widget? floatingActionButton;
   const DefaultLayout({
     super.key,
     required this.child,
     this.backgoundColor,
     this.title,
     this.bottomNavigationBar,
+    this.floatingActionButton,
   });
 
   @override
