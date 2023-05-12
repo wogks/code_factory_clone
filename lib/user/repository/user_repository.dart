@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/retrofit.dart';
 part 'user_repository.g.dart';
 
-final userMeRepository = Provider<UserMeRepository>((ref) {
+final userMeRepositoryProvider = Provider<UserMeRepository>((ref) {
   final dio = ref.watch(dioProvider);
   return UserMeRepository(dio, baseUrl: 'http://$ip/user/me');
 });
