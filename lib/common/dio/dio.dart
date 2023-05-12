@@ -1,5 +1,6 @@
 import 'package:codfac/common/const/data.dart';
 import 'package:codfac/common/secure_storage/secure_storage.dart';
+import 'package:codfac/user/provider/auth_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,15 +9,22 @@ final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
   final storage = ref.watch(secureStorageProvider);
 
-  dio.interceptors.add(CustomIntercepter(storage: storage));
+  dio.interceptors.add(CustomIntercepter(
+    storage: storage,
+    ref: ref,
+  ));
 
   return dio;
 });
 
 class CustomIntercepter extends Interceptor {
+  final Ref ref;
   final FlutterSecureStorage storage;
 
-  CustomIntercepter({required this.storage});
+  CustomIntercepter({
+    required this.storage,
+    required this.ref,
+  });
 //인터셉터의 기능
 //1) 요청 보낼때 ~했을때를 개발자는 on을 사용한다
 //요청이 보내질때마다 만약에 요청의 Header에 accessToken: true라는 값이 있다면
@@ -90,6 +98,7 @@ class CustomIntercepter extends Interceptor {
         final response = await dio.fetch(options);
         return handler.resolve(response);
       } on DioError catch (e) {
+        ref.read(authProvider.notifier).logout();
         return handler.reject(e);
       }
     }
