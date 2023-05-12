@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:codfac/common/component/custom_text_form_field.dart';
 import 'package:codfac/common/const/color.dart';
 import 'package:codfac/common/const/data.dart';
 import 'package:codfac/common/layout/default_layout.dart';
@@ -9,18 +10,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../common/component/custom_text_form_field.dart';
-
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+  static String get routeName => 'login';
+
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  String userName = '';
-  String passord = '';
+  String username = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -28,44 +29,42 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return DefaultLayout(
       child: SingleChildScrollView(
-        //키보드를 치다가 위아래도 스크롤 하면 키보드가 자동으로 사라짐
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SafeArea(
           top: true,
           bottom: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const _Title(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 16.0),
                 const _SubTitle(),
                 Image.asset(
-                  '/Users/SIMBAAT/Desktop/simbaat/codfac/codfac/asset/img/misc/logo.png',
-                  //미디어 쿼리의 3분의2
+                  'asset/img/misc/logo.png',
                   width: MediaQuery.of(context).size.width / 3 * 2,
                 ),
                 CustomTextFormField(
-                  hintText: '이메일을 입력해주세요',
+                  hintText: '이메일을 입력해주세요.',
                   onChanged: (String value) {
-                    userName = value;
+                    username = value;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 16.0),
                 CustomTextFormField(
-                  hintText: '비밀번호를 입력해주세요',
-                  onChanged: (value) {
-                    passord = value;
+                  hintText: '비밀번호를 입력해주세요.',
+                  onChanged: (String value) {
+                    password = value;
                   },
                   obscureText: true,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () async {
-                    final rawString = '$userName:$passord';
-                    //다트에서 base64로 인코딩 하는법
-                    //string을넣고 string을 반환받겠다
+                    // ID:비밀번호
+                    final rawString = '$username:$password';
+
                     Codec<String, String> stringToBase64 = utf8.fuse(base64);
 
                     String token = stringToBase64.encode(rawString);
@@ -73,34 +72,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     final resp = await dio.post(
                       'http://$ip/auth/login',
                       options: Options(
-                        //일반 토큰일때는 베이직
-                        headers: {'authorization': 'Basic $token'},
+                        headers: {
+                          'authorization': 'Basic $token',
+                        },
                       ),
                     );
-                    print(resp.data);
+
                     final refreshToken = resp.data['refreshToken'];
-                    final acsessToken = resp.data['accessToken'];
+                    final accessToken = resp.data['accessToken'];
+
                     final storage = ref.read(secureStorageProvider);
+
                     await storage.write(
                         key: REFRESH_TOKEN_KEY, value: refreshToken);
                     await storage.write(
-                        key: ACCESS_TOKEN_KEY, value: acsessToken);
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const RootTab(),
-                    ));
+                        key: ACCESS_TOKEN_KEY, value: accessToken);
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const RootTab(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: PRIMARY_COLOR,
                   ),
-                  child: const Text('로그인'),
+                  child: const Text(
+                    '로그인',
+                  ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {},
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black,
                   ),
-                  child: const Text('회원가입'),
-                )
+                  child: const Text(
+                    '회원가입',
+                  ),
+                ),
               ],
             ),
           ),
@@ -111,19 +120,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 }
 
 class _Title extends StatelessWidget {
-  const _Title();
+  const _Title({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const Text(
       '환영합니다!',
-      style: TextStyle(fontSize: 34, fontWeight: FontWeight.w500),
+      style: TextStyle(
+        fontSize: 34,
+        fontWeight: FontWeight.w500,
+        color: Colors.black,
+      ),
     );
   }
 }
 
 class _SubTitle extends StatelessWidget {
-  const _SubTitle();
+  const _SubTitle({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
