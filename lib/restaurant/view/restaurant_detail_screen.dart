@@ -1,8 +1,10 @@
+import 'package:codfac/common/const/color.dart';
 import 'package:codfac/product/model/product_model.dart';
 import 'package:codfac/user/provider/basket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../../common/layout/default_layout.dart';
 import '../../common/model/cursor_pagination_model.dart';
@@ -59,24 +61,29 @@ class _RestaurantDetailScreenState
     final basket = ref.watch(basketProvider);
 
     if (state == null) {
-      return DefaultLayout(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Badge(
-            isLabelVisible: basket.isNotEmpty,
-            child: Text(basket
-                .fold<int>(0,
-                    (previousValue, element) => previousValue + element.count)
-                .toString()),
-          ),
-        ),
-        child: const Center(
+      return const DefaultLayout(
+        child: Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
 
     return DefaultLayout(
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: PRIMARY_COLOR,
+          onPressed: () {},
+          child: badges.Badge(
+            badgeStyle: const badges.BadgeStyle(badgeColor: Colors.white),
+            showBadge: basket.isNotEmpty,
+            badgeContent: Text(
+              basket
+                  .fold<int>(0,
+                      (previousValue, element) => previousValue + element.count)
+                  .toString(),
+              style: const TextStyle(color: PRIMARY_COLOR),
+            ),
+            child: const Icon(Icons.shopping_basket_outlined),
+          )),
       title: '불타는 떡볶이',
       child: CustomScrollView(
         controller: controller,
