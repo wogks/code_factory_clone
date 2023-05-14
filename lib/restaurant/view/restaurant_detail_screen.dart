@@ -1,7 +1,7 @@
 import 'package:codfac/common/const/color.dart';
 import 'package:codfac/product/model/product_model.dart';
 import 'package:codfac/user/provider/basket_provider.dart';
-import 'package:codfac/user/view/basket_screen.dart';
+import 'package:codfac/restaurant/view/basket_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

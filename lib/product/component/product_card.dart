@@ -113,19 +113,23 @@ class ProductCard extends ConsumerWidget {
           ),
         ),
         if (onSubtract != null && onAdd != null)
-          Footer(
-            total: (basket
-                        .firstWhere((element) => element.product.id == id)
-                        .count *
-                    basket
-                        .firstWhere((element) => element.product.id == id)
-                        .product
-                        .price)
-                .toString(),
-            count:
-                basket.firstWhere((element) => element.product.id == id).count,
-            onAdd: onAdd!,
-            onSubtract: onSubtract!,
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Footer(
+              total: (basket
+                          .firstWhere((element) => element.product.id == id)
+                          .count *
+                      basket
+                          .firstWhere((element) => element.product.id == id)
+                          .product
+                          .price)
+                  .toString(),
+              count: basket
+                  .firstWhere((element) => element.product.id == id)
+                  .count,
+              onAdd: onAdd!,
+              onSubtract: onSubtract!,
+            ),
           )
       ],
     );
@@ -153,13 +157,16 @@ class Footer extends StatelessWidget {
           '총액 ₩$total',
           style: const TextStyle(color: PRIMARY_COLOR),
         ),
+        const Spacer(),
         Row(
           children: [
             renderButton(icon: Icons.remove, onTap: onSubtract),
+            const SizedBox(width: 8),
             Text(
               count.toString(),
               style: const TextStyle(color: PRIMARY_COLOR),
             ),
+            const SizedBox(width: 8),
             renderButton(icon: Icons.add, onTap: onAdd),
           ],
         )
