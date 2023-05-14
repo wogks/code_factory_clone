@@ -2,6 +2,7 @@ import 'package:codfac/common/view/root_tab.dart';
 import 'package:codfac/restaurant/view/restaurant_detail_screen.dart';
 import 'package:codfac/user/model/user_model.dart';
 import 'package:codfac/user/provider/user_me_provider.dart';
+import 'package:codfac/user/view/basket_screen.dart';
 import 'package:codfac/user/view/login_screen.dart';
 import 'package:codfac/user/view/splash_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -49,6 +50,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/login',
           name: LoginScreen.routeName,
           builder: (_, __) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: '/basket',
+          name: BasketScreen.routeName,
+          builder: (_, __) => const BasketScreen(),
         ),
       ];
 

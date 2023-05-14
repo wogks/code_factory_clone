@@ -1,8 +1,10 @@
 import 'package:codfac/common/const/color.dart';
 import 'package:codfac/product/model/product_model.dart';
 import 'package:codfac/user/provider/basket_provider.dart';
+import 'package:codfac/user/view/basket_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -71,7 +73,9 @@ class _RestaurantDetailScreenState
     return DefaultLayout(
       floatingActionButton: FloatingActionButton(
           backgroundColor: PRIMARY_COLOR,
-          onPressed: () {},
+          onPressed: () {
+            context.pushNamed(BasketScreen.routeName);
+          },
           child: badges.Badge(
             badgeStyle: const badges.BadgeStyle(badgeColor: Colors.white),
             showBadge: basket.isNotEmpty,
