@@ -1,4 +1,5 @@
 import 'package:codfac/common/view/root_tab.dart';
+import 'package:codfac/order/view/order_done_screen.dart';
 import 'package:codfac/restaurant/view/restaurant_detail_screen.dart';
 import 'package:codfac/user/model/user_model.dart';
 import 'package:codfac/user/provider/user_me_provider.dart';
@@ -55,6 +56,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/basket',
           name: BasketScreen.routeName,
           builder: (_, __) => const BasketScreen(),
+        ),
+        GoRoute(
+          path: '/oder_done',
+          name: OrderDoneScreen.routeName,
+          builder: (_, __) => const OrderDoneScreen(),
         ),
       ];
 

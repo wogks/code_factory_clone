@@ -18,6 +18,8 @@ class PostOrderBody {
 
   factory PostOrderBody.fromJson(Map<String, dynamic> json) =>
       _$PostOrderBodyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostOrderBodyToJson(this);
 }
 
 @JsonSerializable()

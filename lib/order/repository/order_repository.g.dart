@@ -24,7 +24,8 @@ class _OrderRepository implements OrderRepository {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
-    final _data = body;
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<OrderModel>(Options(
       method: 'POST',
