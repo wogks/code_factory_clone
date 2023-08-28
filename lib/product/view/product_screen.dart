@@ -17,7 +17,7 @@ class ProductScreen extends StatelessWidget {
         return GestureDetector(
             onTap: () {
               context.goNamed(RestaurantDetailScreen.raoutName,
-                  params: {'rid': model.restaurant.id});
+                  pathParameters: {'rid': model.restaurant.id});
             },
             child: ProductCard.fromProdectModel(model: model));
       },

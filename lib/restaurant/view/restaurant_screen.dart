@@ -16,7 +16,7 @@ class RestaurantScreen extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             // context.go('/restaurant/${model.id}');
-            context.goNamed(RestaurantDetailScreen.raoutName, params: {
+            context.goNamed(RestaurantDetailScreen.raoutName, pathParameters: {
               'rid': model.id,
             });
           },

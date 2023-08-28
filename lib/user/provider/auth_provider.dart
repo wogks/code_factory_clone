@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:codfac/common/view/root_tab.dart';
 import 'package:codfac/order/view/order_done_screen.dart';
 import 'package:codfac/restaurant/view/restaurant_detail_screen.dart';
@@ -6,7 +8,7 @@ import 'package:codfac/user/provider/user_me_provider.dart';
 import 'package:codfac/restaurant/view/basket_screen.dart';
 import 'package:codfac/user/view/login_screen.dart';
 import 'package:codfac/user/view/splash_screen.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -37,7 +39,7 @@ class AuthProvider extends ChangeNotifier {
               path: 'restaurant/:rid',
               name: RestaurantDetailScreen.raoutName,
               builder: (_, state) => RestaurantDetailScreen(
-                id: state.params['rid']!,
+                id: state.pathParameters['rid']!,
               ),
             ),
           ],
@@ -73,7 +75,7 @@ class AuthProvider extends ChangeNotifier {
   // 토큰이 존재하는지 확인하고
   // 로그인 스크린으로 보내줄지
   // 홈 스크린으로 보내줄지 확인하는 과정이 필요하다.
-  String? redirectLogic(GoRouterState state) {
+  FutureOr<String>? redirectLogic(BuildContext context, GoRouterState state) {
     final UserModelBase? user = ref.read(userMeProvider);
 
     final logginIn = state.location == '/login';
